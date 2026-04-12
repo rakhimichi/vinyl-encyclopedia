@@ -11,7 +11,7 @@
         <p class="hero-label">Protected Page</p>
         <h1>Welcome, <span th:text="${username}">user</span></h1>
         <p class="hero-text">
-            Authentication works. Next we will build the real vinyl collection features here.
+            Your personal vinyl dashboard is ready. Next we will add record management.
         </p>
 
         <div class="hero-actions">
@@ -23,6 +23,23 @@
             </form>
         </div>
     </header>
+
+    <section class="info-grid">
+        <div class="card">
+            <h2>Total Records</h2>
+            <p th:text="${stats.totalRecords}">0</p>
+        </div>
+
+        <div class="card">
+            <h2>In My Collection</h2>
+            <p th:text="${stats.inMyCollectionRecords}">0</p>
+        </div>
+
+        <div class="card">
+            <h2>Wishlist</h2>
+            <p th:text="${stats.wishlistRecords}">0</p>
+        </div>
+    </section>
 </div>
 </body>
 </html>
