@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Records Catalog - Vinyl Encyclopedia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="page">
+    <header class="hero">
+        <p class="hero-label">Your Vinyl Encyclopedia</p>
+        <h1>Records Catalog</h1>
+        <p class="hero-text">
+            Browse your full vinyl catalog in a visual cover-based layout. Records are grouped into In My Collection and Wishlist.
+        </p>
+
+        <div class="hero-actions">
+            <a th:href="@{/dashboard}" class="btn btn-secondary">Dashboard</a>
+            <a th:href="@{/records/new(section='IN_MY_COLLECTION')}" class="btn btn-secondary">Add Record</a>
+            <a th:href="@{/records/new(section='WISHLIST')}" class="btn btn-secondary">Add to Wishlist</a>
+
+            <form th:action="@{/logout}" method="post" class="inline-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <button type="submit" class="btn btn-primary">Logout</button>
+            </form>
+        </div>
+    </header>
+
+    <section id="collection-section" class="catalog-section">
+        <div class="section-header">
+            <div class="section-title-row">
+                <h2>In My Collection</h2>
+                <span class="section-count" th:text="${#lists.size(inMyCollectionRecords)}">0</span>
+            </div>
+            <a th:href="@{/records/new(section='IN_MY_COLLECTION')}" class="section-link">+ Add record</a>
+        </div>
+
+        <div th:if="${#lists.isEmpty(inMyCollectionRecords)}" class="empty-state">
+            <p>No records in your collection yet.</p>
+        </div>
+
+        <div th:if="${!#lists.isEmpty(inMyCollectionRecords)}" class="catalog-grid">
+            <div class="catalog-card" th:each="record : ${inMyCollectionRecords}">
+                <div class="catalog-cover">
+                    <img th:src="${record.coverImagePath}" alt="Cover image">
+                </div>
+
+                <div class="catalog-body">
+                    <h3 class="catalog-title" th:text="${record.title}">Album Title</h3>
+                    <p class="catalog-subtitle" th:text="${record.artist}">Artist</p>
+
+                    <div class="record-tags">
+                        <span class="tag">In My Collection</span>
+                        <span class="tag" th:if="${record.vinylFormat != null}" th:text="${record.vinylFormat}">LP</span>
+                    </div>
+
+                    <div class="catalog-links">
+                        <a th:href="@{'/records/' + ${record.id} + '/edit'}" class="card-link">Edit record</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="wishlist-section" class="catalog-section">
+        <div class="section-header">
+            <div class="section-title-row">
+                <h2>Wishlist</h2>
+                <span class="section-count" th:text="${#lists.size(wishlistRecords)}">0</span>
+            </div>
+            <a th:href="@{/records/new(section='WISHLIST')}" class="section-link">+ Add to wishlist</a>
+        </div>
+
+        <div th:if="${#lists.isEmpty(wishlistRecords)}" class="empty-state">
+            <p>Your wishlist is empty.</p>
+        </div>
+
+        <div th:if="${!#lists.isEmpty(wishlistRecords)}" class="catalog-grid">
+            <div class="catalog-card" th:each="record : ${wishlistRecords}">
+                <div class="catalog-cover">
+                    <img th:src="${record.coverImagePath}" alt="Cover image">
+                </div>
+
+                <div class="catalog-body">
+                    <h3 class="catalog-title" th:text="${record.title}">Album Title</h3>
+                    <p class="catalog-subtitle" th:text="${record.artist}">Artist</p>
+
+                    <div class="record-tags">
+                        <span class="tag">Wishlist</span>
+                        <span class="tag" th:if="${record.vinylFormat != null}" th:text="${record.vinylFormat}">LP</span>
+                    </div>
+
+                    <div class="catalog-links">
+                        <a th:href="@{'/records/' + ${record.id} + '/edit'}" class="card-link">Edit record</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

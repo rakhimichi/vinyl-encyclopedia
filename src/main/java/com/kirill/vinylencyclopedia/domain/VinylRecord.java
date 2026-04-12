@@ -45,6 +45,7 @@ public class VinylRecord {
     @Column(length = 1000)
     private String notes;
 
+    @Column(nullable = false, length = 1000)
     private String coverImagePath;
 
     @Column(nullable = false, updatable = false)

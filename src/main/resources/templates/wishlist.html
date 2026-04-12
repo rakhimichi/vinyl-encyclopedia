@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Wishlist - Vinyl Encyclopedia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="page">
+    <header class="hero">
+        <p class="hero-label">Your Vinyl Encyclopedia</p>
+        <h1>Wishlist</h1>
+        <p class="hero-text">
+            Here you can see all records that you want to add to your collection in the future.
+        </p>
+
+        <div class="hero-actions">
+            <a th:href="@{/dashboard}" class="btn btn-secondary">Dashboard</a>
+            <a th:href="@{/records}" class="btn btn-secondary">My Records</a>
+
+            <form th:action="@{/logout}" method="post" class="inline-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <button type="submit" class="btn btn-primary">Logout</button>
+            </form>
+        </div>
+    </header>
+
+    <section class="single-list-section">
+        <div class="list-card wide-list-card">
+            <h2>Wishlist Records</h2>
+
+            <div th:if="${#lists.isEmpty(records)}" class="empty-state">
+                <p>Your wishlist is empty.</p>
+            </div>
+
+            <div th:if="${!#lists.isEmpty(records)}" class="record-list">
+                <div class="record-item" th:each="record : ${records}">
+                    <div class="record-cover">
+                        <img th:if="${record.coverImagePath != null and !#strings.isEmpty(record.coverImagePath)}"
+                             th:src="${record.coverImagePath}"
+                             alt="Cover image">
+                        <div th:if="${record.coverImagePath == null or #strings.isEmpty(record.coverImagePath)}"
+                             class="cover-placeholder">
+                            No Image
+                        </div>
+                    </div>
+
+                    <div class="record-content">
+                        <h3 th:text="${record.artist + ' - ' + record.title}">Artist - Title</h3>
+
+                        <div class="record-tags">
+                            <span class="tag">Wishlist</span>
+                            <span class="tag" th:if="${record.vinylFormat != null}" th:text="${record.vinylFormat}">LP</span>
+                        </div>
+
+                        <div class="record-actions">
+                            <a th:href="@{'/records/' + ${record.id} + '/edit'}" class="btn btn-secondary btn-small">Edit</a>
+                        </div>
+
+                        <p th:if="${record.genre != null and !#strings.isEmpty(record.genre)}">
+                            <strong>Genre:</strong> <span th:text="${record.genre}"></span>
+                        </p>
+
+                        <p th:if="${record.releaseYear != null}">
+                            <strong>Release Year:</strong> <span th:text="${record.releaseYear}"></span>
+                        </p>
+
+                        <p th:if="${record.labelName != null and !#strings.isEmpty(record.labelName)}">
+                            <strong>Label:</strong> <span th:text="${record.labelName}"></span>
+                        </p>
+
+                        <p th:if="${record.notes != null and !#strings.isEmpty(record.notes)}">
+                            <strong>Notes:</strong> <span th:text="${record.notes}"></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

@@ -11,11 +11,12 @@
         <p class="hero-label">Protected Page</p>
         <h1>Welcome, <span th:text="${username}">user</span></h1>
         <p class="hero-text">
-            Your personal vinyl dashboard is ready. Next we will add record management.
+            Your personal vinyl dashboard is ready. Add new records or open your full visual catalog.
         </p>
 
         <div class="hero-actions">
-            <a th:href="@{/}" class="btn btn-secondary">Home</a>
+            <a th:href="@{/records/new(section='IN_MY_COLLECTION')}" class="btn btn-secondary">Add Record</a>
+            <a th:href="@{/records/new(section='WISHLIST')}" class="btn btn-secondary">Add to Wishlist</a>
 
             <form th:action="@{/logout}" method="post" class="inline-form">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
@@ -28,16 +29,19 @@
         <div class="card">
             <h2>Total Records</h2>
             <p th:text="${stats.totalRecords}">0</p>
+            <a th:href="@{/records}" class="card-link">Open records catalog</a>
         </div>
 
         <div class="card">
             <h2>In My Collection</h2>
             <p th:text="${stats.inMyCollectionRecords}">0</p>
+            <a th:href="@{/records#collection-section}" class="card-link">Open collection section</a>
         </div>
 
         <div class="card">
             <h2>Wishlist</h2>
             <p th:text="${stats.wishlistRecords}">0</p>
+            <a th:href="@{/records#wishlist-section}" class="card-link">Open wishlist section</a>
         </div>
     </section>
 </div>

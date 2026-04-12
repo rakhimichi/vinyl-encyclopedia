@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Record Editor - Vinyl Encyclopedia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="page">
+    <header class="hero">
+        <p class="hero-label">Your Vinyl Encyclopedia</p>
+        <h1 th:text="${editorHeading}">Add Record</h1>
+        <p class="hero-text" th:text="${editorDescription}">
+            Add a vinyl record to your collection and immediately see it appear in the preview list.
+        </p>
+
+        <div class="hero-actions">
+            <a th:href="@{/dashboard}" class="btn btn-secondary">Dashboard</a>
+            <a th:href="@{/records}" class="btn btn-secondary">Open Catalog</a>
+            <a th:href="${alternateActionLink}" class="btn btn-secondary" th:text="${alternateActionLabel}">Add to Wishlist</a>
+
+            <form th:action="@{/logout}" method="post" class="inline-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <button type="submit" class="btn btn-primary">Logout</button>
+            </form>
+        </div>
+    </header>
+
+    <section class="content-grid">
+        <div class="form-card">
+            <h2 th:text="${editorHeading}">Add Record</h2>
+
+            <form th:action="@{/records}" th:object="${recordForm}" method="post" class="record-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                <div class="form-group">
+                    <label for="artist">Artist *</label>
+                    <input id="artist" type="text" th:field="*{artist}">
+                    <p class="field-error" th:if="${#fields.hasErrors('artist')}" th:errors="*{artist}"></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="title">Album Title *</label>
+                    <input id="title" type="text" th:field="*{title}">
+                    <p class="field-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="coverImagePath">Cover Image URL *</label>
+                    <input id="coverImagePath" type="text" th:field="*{coverImagePath}">
+                    <p class="field-error" th:if="${#fields.hasErrors('coverImagePath')}" th:errors="*{coverImagePath}"></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="genre">Genre</label>
+                    <input id="genre" type="text" th:field="*{genre}">
+                    <p class="field-error" th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}"></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="releaseYear">Release Year</label>
+                    <input id="releaseYear" type="number" th:field="*{releaseYear}">
+                    <p class="field-error" th:if="${#fields.hasErrors('releaseYear')}" th:errors="*{releaseYear}"></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="labelName">Label</label>
+                    <input id="labelName" type="text" th:field="*{labelName}">
+                    <p class="field-error" th:if="${#fields.hasErrors('labelName')}" th:errors="*{labelName}"></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="collectionSection">Section</label>
+                    <select id="collectionSection" th:field="*{collectionSection}">
+                        <option value="">Select section</option>
+                        <option th:each="section : ${collectionSections}"
+                                th:value="${section}"
+                                th:text="${section == T(com.kirill.vinylencyclopedia.domain.CollectionSection).IN_MY_COLLECTION ? 'In My Collection' : 'Wishlist'}">
+                        </option>
+                    </select>
+                    <p class="field-error" th:if="${#fields.hasErrors('collectionSection')}" th:errors="*{collectionSection}"></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="vinylFormat">Vinyl Format</label>
+                    <select id="vinylFormat" th:field="*{vinylFormat}">
+                        <option value="">Select format</option>
+                        <option th:each="format : ${vinylFormats}"
+                                th:value="${format}"
+                                th:text="${format}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Notes</label>
+                    <textarea id="notes" th:field="*{notes}" rows="4"></textarea>
+                    <p class="field-error" th:if="${#fields.hasErrors('notes')}" th:errors="*{notes}"></p>
+                </div>
+
+                <button type="submit" class="btn btn-primary full-width" th:text="${submitLabel}">Add Record</button>
+            </form>
+        </div>
+
+        <div class="list-card">
+            <h2>Current Preview</h2>
+
+            <div th:if="${#lists.isEmpty(records)}" class="empty-state">
+                <p>No records yet. Add your first vinyl record using the form.</p>
+            </div>
+
+            <div th:if="${!#lists.isEmpty(records)}" class="record-list">
+                <div class="record-item" th:each="record : ${records}">
+                    <div class="record-cover">
+                        <img th:src="${record.coverImagePath}" alt="Cover image">
+                    </div>
+
+                    <div class="record-content">
+                        <h3 th:text="${record.artist + ' - ' + record.title}">Artist - Title</h3>
+
+                        <div class="record-tags">
+                            <span class="tag"
+                                  th:text="${record.collectionSection == T(com.kirill.vinylencyclopedia.domain.CollectionSection).IN_MY_COLLECTION ? 'In My Collection' : 'Wishlist'}">
+                                In My Collection
+                            </span>
+
+                            <span class="tag" th:if="${record.vinylFormat != null}" th:text="${record.vinylFormat}">LP</span>
+                        </div>
+
+                        <div class="record-actions">
+                            <a th:href="@{'/records/' + ${record.id} + '/edit'}" class="btn btn-secondary btn-small">Edit</a>
+                        </div>
+
+                        <p th:if="${record.genre != null and !#strings.isEmpty(record.genre)}">
+                            <strong>Genre:</strong> <span th:text="${record.genre}"></span>
+                        </p>
+
+                        <p th:if="${record.releaseYear != null}">
+                            <strong>Release Year:</strong> <span th:text="${record.releaseYear}"></span>
+                        </p>
+
+                        <p th:if="${record.labelName != null and !#strings.isEmpty(record.labelName)}">
+                            <strong>Label:</strong> <span th:text="${record.labelName}"></span>
+                        </p>
+
+                        <p th:if="${record.notes != null and !#strings.isEmpty(record.notes)}">
+                            <strong>Notes:</strong> <span th:text="${record.notes}"></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>
