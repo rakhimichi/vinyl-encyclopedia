@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Vinyl Encyclopedia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="page">
+    <header class="hero">
+        <p class="hero-label">Personal Vinyl Collection</p>
+        <h1>Vinyl Encyclopedia</h1>
+        <p class="hero-text">
+            A modern web application for managing your vinyl records,
+            organizing your collection, and building your wishlist.
+        </p>
+        <div class="hero-actions">
+            <a th:href="@{/login}" class="btn btn-primary">Sign In</a>
+            <a th:href="@{/dashboard}" class="btn btn-secondary">Open Dashboard</a>
+        </div>
+    </header>
+
+    <section class="info-grid">
+        <div class="card">
+            <h2>Owned</h2>
+            <p>Store records you already have in your personal collection.</p>
+        </div>
+
+        <div class="card">
+            <h2>Wishlist</h2>
+            <p>Keep track of albums you want to buy in the future.</p>
+        </div>
+
+        <div class="card">
+            <h2>Images</h2>
+            <p>Add small cover images to make the collection look like a real encyclopedia.</p>
+        </div>
+    </section>
+</div>
+</body>
+</html>
