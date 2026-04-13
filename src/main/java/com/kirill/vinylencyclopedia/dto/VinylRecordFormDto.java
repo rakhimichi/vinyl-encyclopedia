@@ -19,6 +19,7 @@ public class VinylRecordFormDto {
     @Size(max = 255, message = "Album title must be at most 255 characters")
     private String title;
 
+    @NotBlank(message = "Genre is required")
     @Size(max = 255, message = "Genre must be at most 255 characters")
     private String genre;
 

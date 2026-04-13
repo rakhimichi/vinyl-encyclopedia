@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <title>Records Catalog - Vinyl Encyclopedia</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .catalog-content {
+            transition: opacity 0.2s ease;
+        }
+
+        .catalog-content.loading {
+            opacity: 0.45;
+        }
+    </style>
 </head>
 <body>
 <div class="page">
@@ -11,13 +20,11 @@
         <p class="hero-label">Your Vinyl Encyclopedia</p>
         <h1>Records Catalog</h1>
         <p class="hero-text">
-            Browse your full vinyl catalog in a visual cover-based layout. Records are grouped into In My Collection and Wishlist.
+            Browse your full vinyl catalog in a visual cover-based layout. Search and sort your records without leaving the catalog.
         </p>
 
         <div class="hero-actions">
             <a th:href="@{/dashboard}" class="btn btn-secondary">Dashboard</a>
-            <a th:href="@{/records/new(section='IN_MY_COLLECTION')}" class="btn btn-secondary">Add Record</a>
-            <a th:href="@{/records/new(section='WISHLIST')}" class="btn btn-secondary">Add to Wishlist</a>
 
             <form th:action="@{/logout}" method="post" class="inline-form">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
@@ -26,87 +33,218 @@
         </div>
     </header>
 
-    <section id="collection-section" class="catalog-section">
-        <div class="section-header">
-            <div class="section-title-row">
-                <h2>In My Collection</h2>
-                <span class="section-count" th:text="${#lists.size(inMyCollectionRecords)}">0</span>
-            </div>
-            <a th:href="@{/records/new(section='IN_MY_COLLECTION')}" class="section-link">+ Add record</a>
-        </div>
+    <section class="filter-section">
+        <div class="filter-card">
+            <h2>Search & Sort</h2>
 
-        <div th:if="${#lists.isEmpty(inMyCollectionRecords)}" class="empty-state">
-            <p>No records in your collection yet.</p>
-        </div>
-
-        <div th:if="${!#lists.isEmpty(inMyCollectionRecords)}" class="catalog-grid">
-            <div class="catalog-card" th:each="record : ${inMyCollectionRecords}">
-                <div class="catalog-cover">
-                    <img th:src="${record.coverImagePath}" alt="Cover image">
-                </div>
-
-                <div class="catalog-body">
-                    <h3 class="catalog-title" th:text="${record.title}">Album Title</h3>
-                    <p class="catalog-subtitle" th:text="${record.artist}">Artist</p>
-
-                    <div class="record-tags">
-                        <span class="tag">In My Collection</span>
-                        <span class="tag" th:if="${record.vinylFormat != null}" th:text="${record.vinylFormat}">LP</span>
+            <form th:action="@{/records}" method="get" class="filter-form" id="catalogFilterForm">
+                <div class="filter-grid">
+                    <div class="form-group">
+                        <label for="query">Search</label>
+                        <input id="query" name="query" type="text" th:value="${query}" placeholder="Artist, album, genre, label">
                     </div>
 
-                    <div class="catalog-links">
-                        <a th:href="@{'/records/' + ${record.id} + '/edit'}" class="card-link">Edit record</a>
+                    <div class="form-group">
+                        <label for="sortBy">Sort by</label>
+                        <select id="sortBy" name="sortBy">
+                            <option value="artist" th:selected="${sortBy == 'artist'}">Artist (A–Z)</option>
+                            <option value="title" th:selected="${sortBy == 'title'}">Album Title (A–Z)</option>
+                        </select>
                     </div>
-
-                    <form th:action="@{'/records/' + ${record.id} + '/delete'}" method="post" class="delete-form">
-                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                        <button type="submit" class="btn btn-danger btn-small">Delete</button>
-                    </form>
                 </div>
-            </div>
+
+                <div class="filter-actions">
+                    <button type="button" id="resetFiltersButton" class="btn btn-secondary">Reset</button>
+                </div>
+            </form>
         </div>
     </section>
 
-    <section id="wishlist-section" class="catalog-section">
-        <div class="section-header">
-            <div class="section-title-row">
-                <h2>Wishlist</h2>
-                <span class="section-count" th:text="${#lists.size(wishlistRecords)}">0</span>
-            </div>
-            <a th:href="@{/records/new(section='WISHLIST')}" class="section-link">+ Add to wishlist</a>
-        </div>
-
-        <div th:if="${#lists.isEmpty(wishlistRecords)}" class="empty-state">
-            <p>Your wishlist is empty.</p>
-        </div>
-
-        <div th:if="${!#lists.isEmpty(wishlistRecords)}" class="catalog-grid">
-            <div class="catalog-card" th:each="record : ${wishlistRecords}">
-                <div class="catalog-cover">
-                    <img th:src="${record.coverImagePath}" alt="Cover image">
+    <div id="catalogContent" class="catalog-content">
+        <div th:fragment="catalogSections">
+            <section id="collection-section" class="catalog-section">
+                <div class="section-header">
+                    <div class="section-title-row">
+                        <h2>My Collection</h2>
+                        <span class="section-count" th:text="${#lists.size(inMyCollectionRecords)}">0</span>
+                    </div>
+                    <a th:href="@{/records/new(section='IN_MY_COLLECTION')}" class="section-link">+ Add to my collection</a>
                 </div>
 
-                <div class="catalog-body">
-                    <h3 class="catalog-title" th:text="${record.title}">Album Title</h3>
-                    <p class="catalog-subtitle" th:text="${record.artist}">Artist</p>
-
-                    <div class="record-tags">
-                        <span class="tag">Wishlist</span>
-                        <span class="tag" th:if="${record.vinylFormat != null}" th:text="${record.vinylFormat}">LP</span>
-                    </div>
-
-                    <div class="catalog-links">
-                        <a th:href="@{'/records/' + ${record.id} + '/edit'}" class="card-link">Edit record</a>
-                    </div>
-
-                    <form th:action="@{'/records/' + ${record.id} + '/delete'}" method="post" class="delete-form">
-                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                        <button type="submit" class="btn btn-danger btn-small">Delete</button>
-                    </form>
+                <div th:if="${#lists.isEmpty(inMyCollectionRecords)}" class="empty-state">
+                    <p>No matching records in your collection.</p>
                 </div>
-            </div>
+
+                <div th:if="${!#lists.isEmpty(inMyCollectionRecords)}" class="catalog-grid">
+                    <a th:each="record : ${inMyCollectionRecords}"
+                       th:href="@{'/records/' + ${record.id}}"
+                       class="catalog-card-link">
+                        <article class="catalog-card">
+                            <div class="catalog-cover">
+                                <img th:src="${record.coverImagePath}" alt="Cover image">
+                            </div>
+
+                            <div class="catalog-body">
+                                <h3 class="catalog-title" th:text="${record.title}">Album Title</h3>
+                                <p class="catalog-subtitle" th:text="${record.artist}">Artist</p>
+
+                                <div class="record-tags">
+                                    <span class="tag">My Collection</span>
+                                    <span class="tag" th:text="${record.genre}">Genre</span>
+                                </div>
+
+                                <div class="catalog-links">
+                                    <span class="card-link">Open record</span>
+                                </div>
+                            </div>
+                        </article>
+                    </a>
+                </div>
+            </section>
+
+            <section id="wishlist-section" class="catalog-section">
+                <div class="section-header">
+                    <div class="section-title-row">
+                        <h2>Wishlist</h2>
+                        <span class="section-count" th:text="${#lists.size(wishlistRecords)}">0</span>
+                    </div>
+                    <a th:href="@{/records/new(section='WISHLIST')}" class="section-link">+ Add to wishlist</a>
+                </div>
+
+                <div th:if="${#lists.isEmpty(wishlistRecords)}" class="empty-state">
+                    <p>No matching records in wishlist.</p>
+                </div>
+
+                <div th:if="${!#lists.isEmpty(wishlistRecords)}" class="catalog-grid">
+                    <a th:each="record : ${wishlistRecords}"
+                       th:href="@{'/records/' + ${record.id}}"
+                       class="catalog-card-link">
+                        <article class="catalog-card">
+                            <div class="catalog-cover">
+                                <img th:src="${record.coverImagePath}" alt="Cover image">
+                            </div>
+
+                            <div class="catalog-body">
+                                <h3 class="catalog-title" th:text="${record.title}">Album Title</h3>
+                                <p class="catalog-subtitle" th:text="${record.artist}">Artist</p>
+
+                                <div class="record-tags">
+                                    <span class="tag">Wishlist</span>
+                                    <span class="tag" th:text="${record.genre}">Genre</span>
+                                </div>
+
+                                <div class="catalog-links">
+                                    <span class="card-link">Open record</span>
+                                </div>
+                            </div>
+                        </article>
+                    </a>
+                </div>
+            </section>
         </div>
-    </section>
+    </div>
 </div>
+
+<script>
+    const catalogFilterForm = document.getElementById('catalogFilterForm');
+    const queryInput = document.getElementById('query');
+    const sortBySelect = document.getElementById('sortBy');
+    const resetFiltersButton = document.getElementById('resetFiltersButton');
+    const catalogContent = document.getElementById('catalogContent');
+
+    let searchTimer;
+    let activeRequestId = 0;
+
+    function buildParams(includePartial) {
+        const params = new URLSearchParams();
+
+        const queryValue = queryInput.value.trim();
+        const sortByValue = sortBySelect.value;
+
+        if (queryValue !== '') {
+            params.set('query', queryValue);
+        }
+
+        if (sortByValue !== '') {
+            params.set('sortBy', sortByValue);
+        }
+
+        if (includePartial) {
+            params.set('partial', 'true');
+        }
+
+        return params;
+    }
+
+    async function refreshCatalog() {
+        const requestId = ++activeRequestId;
+        const params = buildParams(true);
+        const requestUrl = '/records' + (params.toString() ? '?' + params.toString() : '');
+
+        catalogContent.classList.add('loading');
+
+        try {
+            const response = await fetch(requestUrl, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to load catalog fragment');
+            }
+
+            const html = await response.text();
+
+            if (requestId !== activeRequestId) {
+                return;
+            }
+
+            catalogContent.innerHTML = html;
+
+            const visibleParams = buildParams(false);
+            const visibleUrl = visibleParams.toString()
+                    ? '/records?' + visibleParams.toString()
+                    : '/records';
+
+            window.history.replaceState({}, '', visibleUrl);
+        } catch (error) {
+            console.error(error);
+
+            const fallbackParams = buildParams(false);
+            const fallbackUrl = fallbackParams.toString()
+                    ? '/records?' + fallbackParams.toString()
+                    : '/records';
+
+            window.location.href = fallbackUrl;
+        } finally {
+            if (requestId === activeRequestId) {
+                catalogContent.classList.remove('loading');
+            }
+        }
+    }
+
+    catalogFilterForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        refreshCatalog();
+    });
+
+    queryInput.addEventListener('input', function () {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(function () {
+            refreshCatalog();
+        }, 300);
+    });
+
+    sortBySelect.addEventListener('change', function () {
+        refreshCatalog();
+    });
+
+    resetFiltersButton.addEventListener('click', function () {
+        queryInput.value = '';
+        sortBySelect.value = 'artist';
+        refreshCatalog();
+    });
+</script>
 </body>
 </html>

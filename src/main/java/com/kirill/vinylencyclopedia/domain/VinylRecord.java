@@ -29,6 +29,7 @@ public class VinylRecord {
     @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private String genre;
 
     private Integer releaseYear;

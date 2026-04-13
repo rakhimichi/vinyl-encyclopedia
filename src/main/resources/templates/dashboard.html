@@ -15,7 +15,7 @@
         </p>
 
         <div class="hero-actions">
-            <a th:href="@{/records/new(section='IN_MY_COLLECTION')}" class="btn btn-secondary">Add Record</a>
+            <a th:href="@{/records/new(section='IN_MY_COLLECTION')}" class="btn btn-secondary">Add to My Collection</a>
             <a th:href="@{/records/new(section='WISHLIST')}" class="btn btn-secondary">Add to Wishlist</a>
 
             <form th:action="@{/logout}" method="post" class="inline-form">
@@ -33,9 +33,9 @@
         </div>
 
         <div class="card">
-            <h2>In My Collection</h2>
+            <h2>My Collection</h2>
             <p th:text="${stats.inMyCollectionRecords}">0</p>
-            <a th:href="@{/records#collection-section}" class="card-link">Open collection section</a>
+            <a th:href="@{/records#collection-section}" class="card-link">Open my collection section</a>
         </div>
 
         <div class="card">

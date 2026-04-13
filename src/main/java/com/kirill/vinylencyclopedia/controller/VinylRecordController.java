@@ -28,12 +28,26 @@ public class VinylRecordController {
     }
 
     @GetMapping("/records")
-    public String showRecordsCatalog(Authentication authentication, Model model) {
+    public String showRecordsCatalog(
+            @RequestParam(name = "query", required = false) String query,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "artist") String sortBy,
+            @RequestParam(name = "partial", required = false, defaultValue = "false") boolean partial,
+            Authentication authentication,
+            Model model
+    ) {
         String username = authentication.getName();
 
         model.addAttribute("username", username);
-        model.addAttribute("inMyCollectionRecords", vinylRecordService.getInMyCollectionRecordsForUser(username));
-        model.addAttribute("wishlistRecords", vinylRecordService.getWishlistRecordsForUser(username));
+        model.addAttribute("inMyCollectionRecords",
+                vinylRecordService.getFilteredInMyCollectionRecordsForUser(username, query, sortBy));
+        model.addAttribute("wishlistRecords",
+                vinylRecordService.getFilteredWishlistRecordsForUser(username, query, sortBy));
+        model.addAttribute("query", query == null ? "" : query);
+        model.addAttribute("sortBy", sortBy);
+
+        if (partial) {
+            return "records :: catalogSections";
+        }
 
         return "records";
     }
@@ -83,6 +97,17 @@ public class VinylRecordController {
         return "redirect:/records#wishlist-section";
     }
 
+    @GetMapping("/records/{id}")
+    public String showRecordDetails(@PathVariable Long id, Authentication authentication, Model model) {
+        String username = authentication.getName();
+        VinylRecord record = vinylRecordService.getRecordForUser(id, username);
+
+        model.addAttribute("record", record);
+        model.addAttribute("username", username);
+
+        return "record-details";
+    }
+
     @GetMapping("/records/{id}/edit")
     public String showEditPage(@PathVariable Long id, Authentication authentication, Model model) {
         String username = authentication.getName();
@@ -125,7 +150,7 @@ public class VinylRecordController {
         }
 
         vinylRecordService.updateRecord(id, recordForm, username);
-        return "redirect:/records";
+        return "redirect:/records/" + id;
     }
 
     @PostMapping("/records/{id}/delete")
@@ -145,18 +170,18 @@ public class VinylRecordController {
 
         String editorHeading = currentSection == CollectionSection.WISHLIST
                 ? "Add to Wishlist"
-                : "Add Record";
+                : "Add to My Collection";
 
         String editorDescription = currentSection == CollectionSection.WISHLIST
                 ? "Add a record that you want to buy later. You can still preview your current catalog on the right."
-                : "Add a vinyl record to your collection and immediately see it appear in the preview list.";
+                : "Add a vinyl record to My Collection and immediately see it appear in the preview list.";
 
         String submitLabel = currentSection == CollectionSection.WISHLIST
                 ? "Add to Wishlist"
-                : "Add Record";
+                : "Add to My Collection";
 
         String alternateActionLabel = currentSection == CollectionSection.WISHLIST
-                ? "Add Record"
+                ? "Add to My Collection"
                 : "Add to Wishlist";
 
         String alternateActionLink = currentSection == CollectionSection.WISHLIST
