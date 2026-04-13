@@ -128,6 +128,16 @@ public class VinylRecordController {
         return "redirect:/records";
     }
 
+    @PostMapping("/records/{id}/delete")
+    public String deleteRecord(
+            @PathVariable Long id,
+            Authentication authentication
+    ) {
+        String username = authentication.getName();
+        vinylRecordService.deleteRecord(id, username);
+        return "redirect:/records";
+    }
+
     private void populateRecordEditorModel(Model model, String username, VinylRecordFormDto recordForm) {
         CollectionSection currentSection = recordForm.getCollectionSection() != null
                 ? recordForm.getCollectionSection()

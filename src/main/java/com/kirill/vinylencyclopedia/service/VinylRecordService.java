@@ -79,4 +79,9 @@ public class VinylRecordService {
 
         vinylRecordRepository.save(record);
     }
+
+    public void deleteRecord(Long id, String username) {
+        VinylRecord record = getRecordForUser(id, username);
+        vinylRecordRepository.delete(record);
+    }
 }

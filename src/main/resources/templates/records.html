@@ -57,6 +57,11 @@
                     <div class="catalog-links">
                         <a th:href="@{'/records/' + ${record.id} + '/edit'}" class="card-link">Edit record</a>
                     </div>
+
+                    <form th:action="@{'/records/' + ${record.id} + '/delete'}" method="post" class="delete-form">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button type="submit" class="btn btn-danger btn-small">Delete</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -93,6 +98,11 @@
                     <div class="catalog-links">
                         <a th:href="@{'/records/' + ${record.id} + '/edit'}" class="card-link">Edit record</a>
                     </div>
+
+                    <form th:action="@{'/records/' + ${record.id} + '/delete'}" method="post" class="delete-form">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button type="submit" class="btn btn-danger btn-small">Delete</button>
+                    </form>
                 </div>
             </div>
         </div>

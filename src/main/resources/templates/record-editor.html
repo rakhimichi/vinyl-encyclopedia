@@ -131,6 +131,11 @@
                             <a th:href="@{'/records/' + ${record.id} + '/edit'}" class="btn btn-secondary btn-small">Edit</a>
                         </div>
 
+                        <form th:action="@{'/records/' + ${record.id} + '/delete'}" method="post" class="delete-form">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                            <button type="submit" class="btn btn-danger btn-small">Delete</button>
+                        </form>
+
                         <p th:if="${record.genre != null and !#strings.isEmpty(record.genre)}">
                             <strong>Genre:</strong> <span th:text="${record.genre}"></span>
                         </p>
