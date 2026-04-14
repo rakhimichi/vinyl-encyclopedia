@@ -115,6 +115,8 @@
             <p>This user has no records in Wishlist.</p>
         </div>
 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
         <div th:if="${!#lists.isEmpty(wishlistRecords)}" class="record-list">
             <div class="record-item" th:each="record : ${wishlistRecords}">
                 <div class="record-cover">

@@ -18,6 +18,8 @@
             Registration error.
         </div>
 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
         <form th:action="@{/register}" th:object="${registrationForm}" method="post" class="auth-form">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 

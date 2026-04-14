@@ -53,6 +53,8 @@
                             <span class="tag" th:if="${record.vinylFormat != null}" th:text="${record.vinylFormat}">LP</span>
                         </div>
 
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
                         <div class="record-actions">
                             <a th:href="@{'/records/' + ${record.id} + '/edit'}" class="btn btn-secondary btn-small">Edit</a>
                         </div>

@@ -74,6 +74,8 @@
                             <span class="details-value" th:text="${record.releaseYear}">2020</span>
                         </div>
 
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
                         <div class="details-row" th:if="${record.labelName != null and !#strings.isEmpty(record.labelName)}">
                             <span class="details-label">Label</span>
                             <span class="details-value" th:text="${record.labelName}">Label</span>
