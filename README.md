@@ -7,8 +7,6 @@ Users can store records in **My Collection** or **Wishlist**, browse them in a v
 
 The project also includes **authentication**, **role-based access**, **PostgreSQL database connection**, **deployment to the internet**, and a small **REST API**.
 
----
-
 ## Live Demo
 
 **Deployed application:**  
@@ -16,8 +14,6 @@ https://vinyl-encyclopedia-74073e5d3306.herokuapp.com/dashboard
 
 **GitHub repository:**  
 https://github.com/rakhimichi/vinyl-encyclopedia
-
----
 
 ## Main Features
 
@@ -40,8 +36,6 @@ https://github.com/rakhimichi/vinyl-encyclopedia
 - Responsive layout for desktop and mobile
 - Minimal REST API for selected resources
 
----
-
 ## User Roles
 
 ### USER
@@ -58,8 +52,6 @@ An admin can:
 - open other users' collections
 - delete records from other users' collections
 
----
-
 ## Technologies Used
 
 - **Java 17**
@@ -75,16 +67,12 @@ An admin can:
 - **Heroku**
 - **GitHub**
 
----
-
 ## Database
 
 The application uses **PostgreSQL** as the main database.
 
 - Local development uses a local PostgreSQL database
 - The deployed version uses **Heroku Postgres**
-
----
 
 ## REST API
 
@@ -105,8 +93,6 @@ Examples:
 - `GET /api/admin/users`
 - `GET /api/admin/users/{userId}/records`
 - `DELETE /api/admin/records/{recordId}`
-
----
 
 ## How to Run the Project Locally
 1. Clone the repository
