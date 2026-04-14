@@ -111,48 +111,55 @@ Running Tests
 
 ## The project includes lightweight unit tests for:
 
-registration logic
-vinyl record service logic
-admin service logic
-API controller logic
-Deployment
+- registration logic
+- vinyl record service logic
+- admin service logic
+- API controller logic
+- Deployment
 
 ## The application is deployed to the internet using Heroku.
 
 Deployment setup includes:
 
-Procfile
-system.properties
-PostgreSQL add-on
-automatic deployment from GitHub
-Demo Accounts
+- Procfile
+- system.properties
+- PostgreSQL add-on
+- automatic deployment from GitHub
+- Demo Accounts
 
 ## Example demo accounts can be created by the application initializer:
 
-Admin
+**Admin**
+
 username: admin
+
 password: admin123
-User
+
+**User**
+
 username: user
+
 password: user123
 
 ## Course Goals Covered
 
 This project covers the most important Grade 5 criteria of the course:
 
-wide scope
-authentication
-PostgreSQL database connection
-GitHub repository
-deployment to the internet
-own independently learned features
-Spring Boot functionality beyond basic lecture examples
-structured source code
-commented source code
-optional REST API support
+- wide scope
+- authentication
+- PostgreSQL database connection
+- GitHub repository
+- deployment to the internet
+- own independently learned features
+- Spring Boot functionality beyond basic lecture examples
+- structured source code
+- commented source code
+- optional REST API support
 
 ## Author
 
 Kirill Rakhimov
+
 Haaga-Helia University of Applied Sciences
+
 Back End Programming - SOF003AS3AE-3007
