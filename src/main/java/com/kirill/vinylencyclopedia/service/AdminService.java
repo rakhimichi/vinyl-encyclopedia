@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.kirill.vinylencyclopedia.domain.AppUser;
 import com.kirill.vinylencyclopedia.domain.CollectionSection;
+import com.kirill.vinylencyclopedia.domain.VinylRecord;
 import com.kirill.vinylencyclopedia.dto.AdminUserSummaryDto;
 import com.kirill.vinylencyclopedia.repository.AppUserRepository;
 import com.kirill.vinylencyclopedia.repository.VinylRecordRepository;
@@ -15,10 +16,16 @@ public class AdminService {
 
     private final AppUserRepository appUserRepository;
     private final VinylRecordRepository vinylRecordRepository;
+    private final VinylRecordService vinylRecordService;
 
-    public AdminService(AppUserRepository appUserRepository, VinylRecordRepository vinylRecordRepository) {
+    public AdminService(
+            AppUserRepository appUserRepository,
+            VinylRecordRepository vinylRecordRepository,
+            VinylRecordService vinylRecordService
+    ) {
         this.appUserRepository = appUserRepository;
         this.vinylRecordRepository = vinylRecordRepository;
+        this.vinylRecordService = vinylRecordService;
     }
 
     public List<AdminUserSummaryDto> getAllUserSummaries() {
@@ -35,6 +42,30 @@ public class AdminService {
         return vinylRecordRepository.count();
     }
 
+    public AppUser getUserById(Long userId) {
+        return appUserRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
+    }
+
+    public List<VinylRecord> getMyCollectionRecordsForUser(Long userId) {
+        AppUser user = getUserById(userId);
+        return vinylRecordService.getInMyCollectionRecordsForUser(user.getUsername());
+    }
+
+    public List<VinylRecord> getWishlistRecordsForUser(Long userId) {
+        AppUser user = getUserById(userId);
+        return vinylRecordService.getWishlistRecordsForUser(user.getUsername());
+    }
+
+    public void deleteRecordAsAdmin(Long recordId) {
+        // This method is used only from /admin/** routes.
+        // Because those routes are protected by ROLE_ADMIN, the owner check is intentionally bypassed here.
+        VinylRecord record = vinylRecordRepository.findById(recordId)
+                .orElseThrow(() -> new IllegalArgumentException("Record not found: " + recordId));
+
+        vinylRecordRepository.delete(record);
+    }
+
     private AdminUserSummaryDto toSummary(AppUser user) {
         long totalRecords = vinylRecordRepository.countByOwnerUsername(user.getUsername());
         long myCollectionRecords = vinylRecordRepository.countByOwnerUsernameAndCollectionSection(
@@ -46,7 +77,6 @@ public class AdminService {
                 CollectionSection.WISHLIST
         );
 
-        // Roles are converted to one compact string because the admin page is meant to be a quick overview.
         String roles = user.getRoles().stream()
                 .map(role -> role.getName())
                 .sorted()

@@ -46,6 +46,10 @@
             color: #e2e8f0;
         }
 
+        .admin-user-action {
+            white-space: nowrap;
+        }
+
         @media (max-width: 900px) {
             .admin-grid {
                 grid-template-columns: 1fr;
@@ -59,7 +63,7 @@
         <p class="hero-label">Admin Only</p>
         <h1>Admin Panel</h1>
         <p class="hero-text">
-            This page is available only to ADMIN accounts. It gives a quick overview of all users and their record activity.
+            This page is available only to ADMIN accounts. Review all users, open their collections and manage record activity.
         </p>
 
         <div class="hero-actions">
@@ -98,6 +102,7 @@
                 <th>Total Records</th>
                 <th>My Collection</th>
                 <th>Wishlist</th>
+                <th>Collections</th>
             </tr>
             </thead>
             <tbody>
@@ -109,6 +114,11 @@
                 <td th:text="${user.totalRecords}">0</td>
                 <td th:text="${user.myCollectionRecords}">0</td>
                 <td th:text="${user.wishlistRecords}">0</td>
+                <td class="admin-user-action">
+                    <a th:href="@{'/admin/users/' + ${user.userId} + '/records'}" class="btn btn-secondary btn-small">
+                        Open Collection
+                    </a>
+                </td>
             </tr>
             </tbody>
         </table>
