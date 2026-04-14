@@ -12,7 +12,7 @@ The project also includes **authentication**, **role-based access**, **PostgreSQ
 ## Live Demo
 
 **Deployed application:**  
-https://arcane-retreat-38495-2afeeaaf67e4.herokuapp.com
+https://vinyl-encyclopedia-74073e5d3306.herokuapp.com/dashboard
 
 **GitHub repository:**  
 https://github.com/rakhimichi/vinyl-encyclopedia
