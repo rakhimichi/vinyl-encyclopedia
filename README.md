@@ -10,7 +10,7 @@ The project also includes **authentication**, **role-based access**, **PostgreSQ
 ## Live Demo
 
 **Deployed application:**  
-https://vinyl-encyclopedia-74073e5d3306.herokuapp.com/dashboard
+https://vinyl-encyclopedia-74073e5d3306.herokuapp.com
 
 **GitHub repository:**  
 https://github.com/rakhimichi/vinyl-encyclopedia
@@ -96,18 +96,17 @@ Examples:
 
 ## How to Run the Project Locally
 1. Clone the repository
-git clone https://github.com/rakhimichi/vinyl-encyclopedia.git
-cd vinyl-encyclopedia
+- `git clone https://github.com/rakhimichi/vinyl-encyclopedia.git`
+- `cd vinyl-encyclopedia`
 2. Configure PostgreSQL
-Create a PostgreSQL database, for example:
-CREATE DATABASE vinyldb;
-Update database settings in application.properties if needed.
-3. Run the project
-./mvnw spring-boot:run
+- Create a PostgreSQL database, for example:
+- CREATE DATABASE vinyldb;
+- Update database settings in `application.properties` if needed.
+3. Run the project & tests
+- `./mvnw clean test`
+- `./mvnw spring-boot:run`
 4. Open in browser
 http://localhost:8080
-Running Tests
-./mvnw clean test
 
 ## The project includes lightweight unit tests for:
 
