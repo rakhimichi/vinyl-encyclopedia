@@ -22,8 +22,12 @@ public class DashboardController {
         String username = authentication.getName();
         DashboardStatsDto stats = dashboardService.getStatsForUser(username);
 
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+
         model.addAttribute("username", username);
         model.addAttribute("stats", stats);
+        model.addAttribute("isAdmin", isAdmin);
 
         return "dashboard";
     }

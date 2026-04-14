@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - Vinyl Encyclopedia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="page auth-page">
+    <div class="auth-card auth-card-wide">
+        <p class="hero-label">New User Registration</p>
+        <h1>Create account</h1>
+        <p class="hero-text small-text">
+            New accounts are created with the USER role and can manage only their own records.
+        </p>
+
+        <div th:if="${registrationError}" class="alert alert-error" th:text="${registrationError}">
+            Registration error.
+        </div>
+
+        <form th:action="@{/register}" th:object="${registrationForm}" method="post" class="auth-form">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input id="username" type="text" th:field="*{username}" required>
+                <p class="field-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input id="email" type="email" th:field="*{email}" required>
+                <p class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+            </div>
+
+            <div class="form-group">
+                <label for="firstName">First name</label>
+                <input id="firstName" type="text" th:field="*{firstName}" required>
+                <p class="field-error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
+            </div>
+
+            <div class="form-group">
+                <label for="lastName">Last name</label>
+                <input id="lastName" type="text" th:field="*{lastName}" required>
+                <p class="field-error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input id="password" type="password" th:field="*{password}" required>
+                <p class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm password</label>
+                <input id="confirmPassword" type="password" th:field="*{confirmPassword}" required>
+                <p class="field-error" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></p>
+            </div>
+
+            <button type="submit" class="btn btn-primary full-width">Create account</button>
+        </form>
+
+        <div class="auth-footer-link">
+            <p>Already have an account?</p>
+            <a th:href="@{/login}" class="card-link">Back to sign in</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

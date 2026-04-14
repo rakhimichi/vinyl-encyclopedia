@@ -17,6 +17,7 @@
         <div class="hero-actions">
             <a th:href="@{/records/new(section='IN_MY_COLLECTION')}" class="btn btn-secondary">Add to My Collection</a>
             <a th:href="@{/records/new(section='WISHLIST')}" class="btn btn-secondary">Add to Wishlist</a>
+            <a th:if="${isAdmin}" th:href="@{/admin}" class="btn btn-secondary">Admin Panel</a>
 
             <form th:action="@{/logout}" method="post" class="inline-form">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">

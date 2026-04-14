@@ -14,7 +14,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/css/**", "/images/**").permitAll()
+                        // Public pages stay open so a new user can read the intro, open login and register.
+                        .requestMatchers("/", "/login", "/register", "/css/**", "/images/**").permitAll()
+
+                        // Admin page must stay available only to accounts that have ROLE_ADMIN.
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

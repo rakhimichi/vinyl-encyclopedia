@@ -698,3 +698,17 @@ body {
         font-size: 15px;
     }
 }
+
+.auth-footer-link {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.auth-footer-link p {
+    margin-bottom: 8px;
+    color: #cbd5e1;
+}
+
+.auth-card-wide {
+    max-width: 620px;
+}
