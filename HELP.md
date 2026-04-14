@@ -14,7 +14,7 @@ For further reference, please consider the following sections:
 * [Spring Security](https://docs.spring.io/spring-boot/4.0.5/reference/web/spring-security.html)
 * [Spring Boot DevTools](https://docs.spring.io/spring-boot/4.0.5/reference/using/devtools.html)
 
-### Guides
+### Guide
 The following guides illustrate how to use some features concretely:
 
 * [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
