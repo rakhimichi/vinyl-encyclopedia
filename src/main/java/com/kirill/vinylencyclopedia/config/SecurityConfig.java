@@ -18,9 +18,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
 
                 .authorizeHttpRequests(auth -> auth
-                        // Public pages must stay available to anonymous users so they can open the landing page,
-                        // log in or create a new account.
-                        .requestMatchers("/", "/home", "/login", "/register", "/css/**", "/images/**").permitAll()
+                        // Public pages and static resources must stay available to anonymous users.
+                        .requestMatchers(
+                                "/", "/home", "/login", "/register",
+                                "/css/**", "/images/**",
+                                "/favicon.ico", "/vinyl-favicon.ico", "/**/*.ico"
+                        ).permitAll()
 
                         // Admin web pages and admin API endpoints are limited to users with the ADMIN role.
                         .requestMatchers("/admin/**", "/api/admin/**").hasRole("ADMIN")
@@ -33,7 +36,6 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        // After login, the user always lands on the dashboard.
                         .defaultSuccessUrl("/dashboard", true)
                         .permitAll()
                 )

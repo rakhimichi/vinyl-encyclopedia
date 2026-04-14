@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Record Editor - Vinyl Encyclopedia</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="icon" type="image/png" href="/vinyl-favicon.png?v=2">
+<link rel="apple-touch-icon" href="/vinyl-favicon.png?v=2">
     <style>
         .preview-record-actions {
             display: flex;
@@ -163,6 +165,9 @@
 
                             <span class="tag" th:text="${record.genre}">Genre</span>
                         </div>
+
+                        <link rel="icon" type="image/x-icon" href="/images/vinyl-favicon.ico?v=2">
+<link rel="shortcut icon" href="/images/vinyl-favicon.ico?v=2">
 
                         <p th:if="${record.releaseYear != null}">
                             <strong>Release Year:</strong> <span th:text="${record.releaseYear}"></span>
