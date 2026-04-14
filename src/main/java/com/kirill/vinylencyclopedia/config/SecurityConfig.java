@@ -13,13 +13,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .authorizeHttpRequests(auth -> auth
-                        // Public pages stay open so a new user can read the intro, open login and register.
-                        .requestMatchers("/", "/login", "/register", "/css/**", "/images/**").permitAll()
-
-                        // Admin page must stay available only to accounts that have ROLE_ADMIN.
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-
+                        .requestMatchers("/", "/home", "/login", "/register", "/css/**", "/images/**").permitAll()
+                        .requestMatchers("/admin/**", "/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
