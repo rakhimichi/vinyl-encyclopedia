@@ -34,8 +34,8 @@ public class AdminController {
     public String showUserRecordsAsAdmin(@PathVariable Long userId, Authentication authentication, Model model) {
         AppUser targetUser = adminService.getUserById(userId);
 
-        // Admin gets a dedicated view of another user's collection.
-        // This keeps the normal user flow untouched and makes the role separation clearer.
+        // Admin gets a dedicated page for another user's collection.
+        // This keeps the normal user flow untouched and makes role separation clearer in the UI.
         model.addAttribute("username", authentication.getName());
         model.addAttribute("targetUser", targetUser);
         model.addAttribute("myCollectionRecords", adminService.getMyCollectionRecordsForUser(userId));

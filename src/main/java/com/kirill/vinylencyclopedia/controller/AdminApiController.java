@@ -26,6 +26,7 @@ public class AdminApiController {
 
     @GetMapping("/api/admin/users")
     public List<AdminUserSummaryDto> getAllUsers() {
+        // This endpoint gives admin a compact JSON overview of users and their record statistics.
         return adminService.getAllUserSummaries();
     }
 
@@ -52,6 +53,7 @@ public class AdminApiController {
 
     @DeleteMapping("/api/admin/records/{recordId}")
     public Map<String, String> deleteRecordAsAdmin(@PathVariable Long recordId) {
+        // The admin API returns a simple confirmation message instead of redirecting to an HTML page.
         adminService.deleteRecordAsAdmin(recordId);
         return Map.of("message", "Record deleted successfully");
     }

@@ -25,6 +25,7 @@ public class AuthController {
 
     @GetMapping("/login")
     public String showLoginPage(Authentication authentication) {
+        // If the user is already logged in, there is no reason to keep him on the login page.
         if (isAuthenticated(authentication)) {
             return "redirect:/dashboard";
         }
@@ -48,6 +49,7 @@ public class AuthController {
             BindingResult bindingResult,
             Model model
     ) {
+        // Bean validation handles field-level checks such as empty values and email format.
         if (bindingResult.hasErrors()) {
             return "register";
         }
@@ -55,6 +57,7 @@ public class AuthController {
         try {
             registrationService.registerNewUser(registrationForm);
         } catch (IllegalArgumentException exception) {
+            // Business validation errors, for example duplicate username, are shown back on the same page.
             model.addAttribute("registrationError", exception.getMessage());
             return "register";
         }

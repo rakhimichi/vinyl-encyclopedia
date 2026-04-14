@@ -45,6 +45,8 @@ public class VinylRecordController {
         model.addAttribute("query", query == null ? "" : query);
         model.addAttribute("sortBy", sortBy);
 
+        // The records page supports both a full page render and a smaller Thymeleaf fragment render.
+        // The fragment version is used by the live search and sort feature without reloading the whole page.
         if (partial) {
             return "records :: catalogSections";
         }
@@ -61,9 +63,12 @@ public class VinylRecordController {
         String username = authentication.getName();
 
         VinylRecordFormDto recordForm = new VinylRecordFormDto();
+
+        // If the user opens the page without a section parameter, the form defaults to My Collection.
         if (section == null) {
             section = CollectionSection.IN_MY_COLLECTION;
         }
+
         recordForm.setCollectionSection(section);
 
         populateRecordEditorModel(model, username, recordForm);

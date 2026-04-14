@@ -20,12 +20,15 @@ public class DataInitializer {
             PasswordEncoder passwordEncoder
     ) {
         return args -> {
+            // Roles are created only once. If they already exist, the existing database values are reused.
             Role userRole = roleRepository.findByName("USER")
                     .orElseGet(() -> roleRepository.save(new Role("USER")));
 
             Role adminRole = roleRepository.findByName("ADMIN")
                     .orElseGet(() -> roleRepository.save(new Role("ADMIN")));
 
+            // Demo admin account is created only if it does not exist yet.
+            // This makes the project easier to demonstrate after a fresh deployment.
             if (appUserRepository.findByUsername("admin").isEmpty()) {
                 AppUser admin = new AppUser(
                         "admin",
@@ -34,11 +37,13 @@ public class DataInitializer {
                         "Admin",
                         "User"
                 );
+
                 admin.addRole(adminRole);
                 admin.addRole(userRole);
                 appUserRepository.save(admin);
             }
 
+            // Demo regular user account is also prepared for quick testing.
             if (appUserRepository.findByUsername("user").isEmpty()) {
                 AppUser user = new AppUser(
                         "user",
@@ -47,6 +52,7 @@ public class DataInitializer {
                         "Regular",
                         "User"
                 );
+
                 user.addRole(userRole);
                 appUserRepository.save(user);
             }

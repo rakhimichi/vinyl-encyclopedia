@@ -72,6 +72,7 @@ public class VinylRecordService {
     }
 
     public VinylRecord getRecordForUser(Long id, String username) {
+        // A normal user is allowed to open only his or her own records.
         return vinylRecordRepository.findByIdAndOwnerUsername(id, username)
                 .orElseThrow(() -> new IllegalArgumentException("Record not found: " + id));
     }
@@ -121,6 +122,9 @@ public class VinylRecordService {
 
         Comparator<VinylRecord> comparator;
 
+        // The catalog supports two visible sorting modes:
+        // 1) by artist, then album title
+        // 2) by album title, then artist
         if ("title".equals(normalizedSortBy)) {
             comparator = Comparator
                     .comparing((VinylRecord record) -> normalize(record.getTitle()))
@@ -149,6 +153,8 @@ public class VinylRecordService {
         if (value == null) {
             return "";
         }
+
+        // Lower-case comparison keeps the alphabetical order stable even if the user mixes upper- and lower-case text.
         return value.trim().toLowerCase(Locale.ROOT);
     }
 

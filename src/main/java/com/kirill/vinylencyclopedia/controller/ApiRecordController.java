@@ -31,6 +31,7 @@ public class ApiRecordController {
     ) {
         String username = authentication.getName();
 
+        // The API returns only the authenticated user's own records.
         return vinylRecordService.getFilteredRecordsForUser(username, query, sortBy).stream()
                 .filter(record -> matchesSection(record, section))
                 .map(this::toDto)
@@ -50,6 +51,7 @@ public class ApiRecordController {
 
         String normalizedSection = section.trim().toLowerCase();
 
+        // API uses human-friendly section values so that the endpoint is easier to test manually.
         if (normalizedSection.equals("my-collection")) {
             return record.getCollectionSection() == CollectionSection.IN_MY_COLLECTION;
         }

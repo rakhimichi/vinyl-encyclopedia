@@ -58,8 +58,8 @@ public class AdminService {
     }
 
     public void deleteRecordAsAdmin(Long recordId) {
-        // This method is used only from /admin/** routes.
-        // Because those routes are protected by ROLE_ADMIN, the owner check is intentionally bypassed here.
+        // This method is used only from /admin/** and /api/admin/** routes.
+        // Because those routes are protected by ROLE_ADMIN, the normal owner check is bypassed here on purpose.
         VinylRecord record = vinylRecordRepository.findById(recordId)
                 .orElseThrow(() -> new IllegalArgumentException("Record not found: " + recordId));
 
@@ -77,6 +77,7 @@ public class AdminService {
                 CollectionSection.WISHLIST
         );
 
+        // Roles are collected into one short string because the admin page is designed as a quick overview table.
         String roles = user.getRoles().stream()
                 .map(role -> role.getName())
                 .sorted()
