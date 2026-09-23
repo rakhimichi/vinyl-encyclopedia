@@ -13,7 +13,7 @@
     z-index: -2;
 }
 .naruto-gate::before {
-    background: url("/images/naruto-sasuke.png") center / cover no-repeat;
+    background: url("/images/naruto-sasuke-4k.jpg") center / cover no-repeat;
 }
 .naruto-gate::after {
     z-index: -1;
