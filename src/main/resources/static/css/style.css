@@ -802,3 +802,17 @@ img {
         aspect-ratio: 1 / 1;
     }
 }
+
+.dashboard-page {
+    padding-bottom: 140px;
+}
+
+.pet-projects-link {
+    position: fixed;
+    right: max(20px, env(safe-area-inset-right));
+    bottom: max(20px, env(safe-area-inset-bottom));
+    z-index: 10;
+    width: auto;
+    max-width: calc(100% - 40px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Projects - Vinyl Encyclopedia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="icon" type="image/png" href="/vinyl-favicon.png?v=2">
+</head>
+<body>
+<main class="page">
+    <section class="hero">
+        <h1>My other pet projects</h1>
+        <div class="hero-actions">
+            <a th:href="@{/pet-projects/naruto}" class="btn btn-primary">Tracking Naruto watching progress</a>
+            <a th:href="@{/dashboard}" class="btn btn-secondary">Back to dashboard</a>
+        </div>
+    </section>
+</main>
+</body>
+</html>
