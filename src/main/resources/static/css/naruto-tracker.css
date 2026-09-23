@@ -1115,3 +1115,70 @@ progress::-moz-progress-bar {
         transition:none!important;
     }
 }
+
+/* Three visible rows, with the winning name aligned to the middle row. */
+.character-machine {
+    width: min(100%, 390px);
+    margin: 18px 0 12px;
+    border: 1px solid #42617c;
+    border-radius: 14px;
+    padding: 10px;
+    background: linear-gradient(135deg, #223a51, #0a1525);
+    box-shadow: inset 0 1px 0 #ffffff12, 0 12px 28px #0003;
+}
+.machine-top {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 5px 9px;
+    color: var(--muted);
+    font-size: 9px;
+    letter-spacing: .15em;
+}
+.machine-lights { color: var(--orange); }
+.reel-window {
+    height: 156px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #30465e;
+    border-radius: 8px;
+    background: #071323;
+}
+.reel-window::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, #071323f2, #07132300 38%, #07132300 62%, #071323f2);
+}
+.reel-selection {
+    position: absolute;
+    top: 52px;
+    left: 0;
+    right: 0;
+    height: 52px;
+    border-top: 1px solid #ff943d75;
+    border-bottom: 1px solid #ff943d75;
+    background: #ff943d12;
+}
+.character-reel { position: relative; will-change: transform; }
+.reel-name {
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    color: #d3e4f6;
+    font-size: clamp(13px, 2vw, 19px);
+    font-weight: 650;
+    text-align: center;
+    line-height: 1.15;
+}
+.character-machine.landed {
+    border-color: var(--orange);
+    box-shadow: 0 0 24px #ff943d20;
+}
+.character-machine.landed .reel-name { color: var(--orange); }
+@media (max-width: 480px) {
+    .daily-panel:has(.character-machine:not([hidden])) .daily-emblem { display: none; }
+    .daily-panel:has(.character-machine:not([hidden])) .daily-copy { flex-basis: 100%; }
+}

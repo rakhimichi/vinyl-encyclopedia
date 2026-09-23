@@ -6,8 +6,8 @@
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <title>Наш путь ниндзя — Naruto Watch Log</title>
-    <link rel="stylesheet" th:href="@{/css/naruto-tracker.css(v=1)}">
-    <script th:src="@{/js/naruto-tracker.js(v=1)}" defer></script>
+    <link rel="stylesheet" th:href="@{/css/naruto-tracker.css(v=2)}">
+    <script th:src="@{/js/naruto-tracker.js(v=2)}" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#watch-guide">К списку серий</a>
@@ -20,7 +20,7 @@
 
     <header class="tracker-header">
         <div>
-            <p class="eyebrow">ОДНА ИСТОРИЯ · ДВА НИНДЗЯ</p>
+            <p class="eyebrow">ОДНА ИСТОРИЯ</p>
             <h1>Наш путь ниндзя<span>.</span></h1>
             <p class="subtitle">Смотрим вместе. Отмечаем серии. Успеваем за год.</p>
         </div>
@@ -64,7 +64,7 @@
             <p class="progress-caption"><strong id="watched-count">—</strong> из <span id="total-count">—</span> просмотрено <span class="dot-separator">·</span> осталось <span id="remaining-count">—</span></p>
             <div class="season-mini"><span>Naruto</span><span id="season-one-count">—</span><progress id="season-one-progress" max="178" value="0" aria-label="Прогресс первого сезона"></progress></div>
             <div class="season-mini"><span>Shippuden</span><span id="season-two-count">—</span><progress id="season-two-progress" max="414" value="0" aria-label="Прогресс второго сезона"></progress></div>
-            <p class="muted fine-print">Серия, OVA и фильм = 1 просмотр. Только ваш список.</p>
+            <p class="muted fine-print">Серия, OVA и фильм = 1 просмотр.</p>
         </article>
     </section>
 
@@ -72,12 +72,15 @@
         <div class="mission-status"><span class="eyebrow">МИССИЯ · 12 МЕСЯЦЕВ</span><h2 id="mission-heading">Загружаем прогноз…</h2><span id="mission-detail" class="muted">Старт 24.09.2026</span></div>
         <div class="forecast-number"><span>Предполагаемый финиш</span><strong id="forecast-date">—</strong><small id="forecast-hint">По темпу просмотра</small></div>
         <div class="forecast-number"><span>До дедлайна</span><strong id="deadline-days">—</strong><small id="required-pace">—</small></div>
-        <details class="forecast-info"><summary>Как считается прогноз</summary><p>Старт — 24.09.2026. До первых просмотров ориентир — 3 пункта в день. Затем используем среднее за последние 7 календарных дней, включая дни без просмотра и сегодняшний день. В первую неделю — только дни с начала миссии. Если темп равен нулю, дата финиша не рассчитывается.</p><p>Каждый пункт считается один раз, по выбранной дате просмотра. Дедлайн — 24.09.2027 включительно, время Цюриха. Если к концу этого дня маршрут не завершён, миссия проиграна. <span id="baseline-finish"></span></p></details>
+        <details class="forecast-info"><summary>Как считается прогноз</summary><p>Старт — 24.09.2026. До первых просмотров ориентир — 3 пункта в день. Затем используем среднее за последние 7 календарных дней, включая дни без просмотра и сегодняшний день. В первую неделю — только дни с начала миссии. Если темп равен нулю, дата финиша не рассчитывается.</p><p>Каждый пункт считается один раз, по выбранной дате просмотра. Дедлайн — 24.09.2027 включительно, время Цюриха. Если к концу этого дня маршрут не завершён, миссия проиграна.</p></details>
     </section>
 
     <section class="daily-panel panel" aria-labelledby="daily-heading">
         <div class="daily-emblem" aria-hidden="true">忍</div>
-        <div class="daily-copy"><p class="eyebrow">МИНУТКА ПЕРЕД СЕРИЕЙ</p><h2 id="daily-heading">Кто ты из Наруто сегодня?</h2><p id="character-hint" class="muted">Один день — один персонаж. У каждого свой.</p><div id="character-result" hidden><strong id="character-name"></strong><a id="character-link" target="_blank" rel="noopener noreferrer">Досье ↗ <span class="spoiler-note">возможны спойлеры</span></a></div></div>
+        <div class="daily-copy"><p class="eyebrow">МИНУТКА ПЕРЕД СЕРИЕЙ</p><h2 id="daily-heading">Кто ты из Наруто сегодня?</h2><p id="character-hint" class="muted">Один день — один персонаж. У каждого свой.</p><div id="character-machine" class="character-machine" hidden aria-hidden="true">
+            <div class="machine-top"><span>ШИНОБИ ДНЯ</span><span class="machine-lights">● ● ●</span></div>
+            <div class="reel-window"><div class="reel-selection"></div><div id="character-reel" class="character-reel"></div></div>
+        </div><div id="character-result" role="status" aria-live="polite" hidden><strong id="character-name"></strong><a id="character-link" target="_blank" rel="noopener noreferrer">Досье ↗ <span class="spoiler-note">возможны спойлеры</span></a></div></div>
         <button id="reveal-character" class="button button-orange" type="button" disabled>Узнать персонажа <span aria-hidden="true">↗</span></button>
     </section>
 

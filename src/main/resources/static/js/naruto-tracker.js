@@ -4,7 +4,8 @@
     const $ = id => document.getElementById(id);
     let catalog = [], state = null, season = 1, chartDays = 30;
     let saving = false, loading = false, epoch = 0, toastTimer, dateIsAutomatic = true;
-    let revealedDate = null;
+    let revealedDate = null, spinning = false;
+    const CHARACTER_NAMES = ["Торои", "Гари", "Додай", "Ацуи", "Гурен", "Куросуки Райга", "Третий Казекаге", "Яшамару", "Акебино Джинин", "Мабуи", "Яхико", "Майто Дай", "Хатаке Сакумо", "Ооцуцуки Индра", "Ооцуцуки Ашура", "Мейзу", "Гозу", "Камизуки Изумо", "Хагане Котецу", "Яманака Фуу", "Абураме Торуне", "Ооцуцуки Хамура", "Мунаши Джинпачи", "Суйказан Фугуки", "Кицучи", "Ши", "Намиаши Райдо", "Эбису", "Инузука Хана", "Като Дан", "Ринго Амеюри", "Инузука Цуме", "Куриараре Кушимару", "Баки", "Акацучи", "Исе Удон", "Казамацури Моэги", "Мизуки", "Абураме Шиби", "Хозуки Мангецу", "Хьюга Хизаши", "Хьюга Хиаши", "Учиха Изуна", "Абуми Заку", "Цучи Кин", "Кинута Досу", "Джиробо", "Узуки Югао", "Хьюга Ханаби", "Мифуне", "Самуи", "Омои", "Кидомару", "Сакон и Укон", "Джуго", "Узумаки Мито", "Каратачи Ягура", "Пакура", "Таюя", "Гинкаку", "Кинкаку", "Ямаширо Аоба", "Яманака Иноичи", "Гекко Хаяте", "Шимура Данзо", "Учиха Фугаку", "Юхи Куренай", "Чоджуро", "Ао", "3 Эй", "Муу", "Зецу", "Хан", "Роши", "Хьюга Неджи", "Яманака Ино", "Якуши Кабуто", "Нара Шикаку", "Бива Джузо", "Нохара Рин", "Ширануи Генма", "Морино Ибики", "Куроцучи", "Хозуки Генгецу", "Утаката", "Нии Югито", "Фуу", "Ооцуцуки Хагоромо", "Раса", "Ханзо", "Чиё", "Даруи", "Ооноки", "Шизуне", "Акимичи Чоуза", "Карин", "Кимимаро", "Ооцуцуки Кагуя", "Сенджу Тобирама", "Какузу", "Сарутоби Асума", "Сасори", "Сарутоби Конохамару", "Ямато", "Сарутоби Хирузен", "Гаара", "Учиха Обито", "Теруми Мей", "4 Эй", "Нагато", "Хидан", "Канкуро", "Абураме Шино", "Умино Ирука", "Хошигаки Кисаме", "Дейдара", "Цунаде", "Киллер Би", "Митараши Анко", "Сай", "Тен-Тен", "Хаку", "Момочи Забуза", "Каруи", "Майто Гай", "Нара Шикамару", "Орочимару", "Сенджу Хаширама", "Акимичи Чоджи", "Конан", "Хозуки Суйгецу", "Инузука Киба", "Джирайя", "Темари", "Рок Ли", "Хьюга Хината", "Хатаке Какаши", "Харуно Сакура", "Учиха Мадара", "Учиха Шисуи", "Учиха Итачи", "Учиха Саске", "Узумаки Наруто", "Узумаки Кушина", "Намикадзе Минато"];
     const openGroups = new Set();
     const initializedSeasons = new Set();
     const number = (value, digits = 1) => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: digits }).format(value);
@@ -99,11 +100,10 @@
         text('deadline-days', `${s.daysLeft} дн.`);
         text('required-pace', !s.remaining ? 'Все пункты отмечены'
             : s.status === 'LOST' ? 'Срок миссии истёк' : `Нужно ≥ ${number(Math.ceil(s.requiredPace * 100) / 100, 2)} в день`);
-        text('baseline-finish', `По исходному плану 3 в день финиш — ${date(s.baselineFinish)}.`);
         const next = nextItem();
         text('next-caption', next ? `Далее: сезон ${next.season} · ${next.kind === 'EPISODE' ? 'серия ' : ''}${next.label}` : 'Все пункты маршрута просмотрены.');
         $('go-next').disabled = !next || saving;
-        $('reveal-character').disabled = false;
+        $('reveal-character').disabled = spinning;
         $('watch-date').max = s.today;
         if (dateIsAutomatic || !$('watch-date').value) $('watch-date').value = s.today;
         drawChart();
@@ -161,12 +161,16 @@
     }
 
     function updateCharacter() {
+        if (spinning) return;
         const character = state.character;
+        if ($('character-machine').dataset.date !== character.date) $('character-machine').hidden = true;
         const key = `naruto-character:${state.username}:${character.date}`;
         let revealed = revealedDate === character.date;
         try { revealed ||= localStorage.getItem(key) === 'revealed'; } catch (_) { /* Private mode can disable storage. */ }
         $('character-result').hidden = !revealed;
-        $('reveal-character').hidden = revealed;
+        $('reveal-character').hidden = false;
+        $('reveal-character').disabled = false;
+        text('reveal-character', revealed ? 'Повторить прокрутку ↻' : 'Узнать персонажа ↗');
         text('character-name', character.name);
         $('character-link').href = character.url;
         text('character-hint', revealed ? `Твой персонаж на ${date(character.date, { day: 'numeric', month: 'long' })}. Завтра — новый.`
@@ -372,13 +376,62 @@
         tile.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
         tile.focus({ preventScroll: true });
     });
-    $('reveal-character').addEventListener('click', () => {
-        if (!state) return;
-        revealedDate = state.character.date;
-        try { localStorage.setItem(`naruto-character:${state.username}:${revealedDate}`, 'revealed'); } catch (_) { /* Session-only reveal still works. */ }
-        document.querySelector('.daily-panel').classList.add('revealed');
-        updateCharacter();
-        $('character-link').focus({ preventScroll: true });
+    $('reveal-character').addEventListener('click', async () => {
+        if (!state || spinning) return;
+        spinning = true;
+        // Freeze this day's result during the animation, even if a background sync arrives.
+        const character = { ...state.character };
+        const username = state.username;
+        const panel = document.querySelector('.daily-panel');
+        const machine = $('character-machine');
+        const reel = $('character-reel');
+        $('reveal-character').disabled = true;
+        text('reveal-character', 'Крутится…');
+        $('character-result').hidden = true;
+        machine.hidden = false;
+        machine.dataset.date = character.date;
+        panel.classList.remove('revealed');
+        machine.classList.remove('landed');
+        text('character-hint', 'Кто выпадет сегодня?..');
+        reel.replaceChildren();
+        reel.style.transform = 'translateY(0)';
+        const targetIndex = 31;
+        const names = [];
+        for (let i = 0; i < targetIndex + 2; i++) {
+            let name = CHARACTER_NAMES[Math.floor(Math.random() * CHARACTER_NAMES.length)];
+            if (name === names[i - 1]) name = CHARACTER_NAMES[(CHARACTER_NAMES.indexOf(name) + 1) % CHARACTER_NAMES.length];
+            names.push(i === targetIndex ? character.name : name);
+        }
+        for (const name of names) {
+            const row = document.createElement('div');
+            row.className = 'reel-name';
+            row.textContent = name;
+            reel.append(row);
+        }
+        const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        machine.scrollIntoView({ block: 'nearest', behavior: reducedMotion ? 'instant' : 'smooth' });
+        const destination = `translateY(-${(targetIndex - 1) * 52}px)`;
+        let animation;
+        try {
+            if (!reducedMotion) {
+                animation = reel.animate([
+                    { transform: 'translateY(0)' },
+                    { transform: destination }
+                ], { duration: 4200, easing: 'cubic-bezier(.12,.65,.12,1)', fill: 'forwards' });
+                await animation.finished;
+            }
+            reel.style.transform = destination;
+        } finally {
+            animation?.cancel();
+            spinning = false;
+            revealedDate = character.date;
+            try { localStorage.setItem(`naruto-character:${username}:${character.date}`, 'revealed'); } catch (_) { /* Reveal still works without storage. */ }
+            machine.classList.add('landed');
+            panel.classList.add('revealed');
+            // If midnight passed while spinning, show the new day's normal entry instead.
+            if (state.character.date !== character.date) machine.hidden = true;
+            updateCharacter();
+        }
     });
     $('retry-load').addEventListener('click', () => state ? refresh() : load());
     document.addEventListener('visibilitychange', () => { if (!document.hidden && state) refresh(); });
