@@ -1,0 +1,140 @@
+/* Naruto entrance */
+.naruto-gate {
+    min-height: 100svh;
+    background: #061326;
+    isolation: isolate;
+}
+.naruto-gate::before,
+.naruto-gate::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -2;
+}
+.naruto-gate::before {
+    background: url("/images/naruto-sasuke.png") center / cover no-repeat;
+}
+.naruto-gate::after {
+    z-index: -1;
+    background: linear-gradient(90deg, rgba(3, 12, 29, .95), rgba(3, 12, 29, .72) 40%, rgba(3, 12, 29, .12) 80%),
+                linear-gradient(0deg, rgba(3, 12, 29, .85), transparent 40%);
+}
+.naruto-entry {
+    min-height: 100svh;
+    max-width: 1440px;
+    margin: auto;
+    padding: clamp(24px, 5vw, 72px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 40px;
+}
+.naruto-back {
+    align-self: flex-start;
+    color: #d5e6ff;
+    text-decoration: none;
+    font-size: 14px;
+}
+.naruto-back:hover { color: #ffab4b; }
+.naruto-entry-card {
+    width: min(100%, 490px);
+    padding: clamp(24px, 4vw, 44px);
+    border: 1px solid rgba(157, 198, 255, .25);
+    border-top: 3px solid #ff8a20;
+    border-radius: 24px;
+    background: rgba(6, 20, 43, .72);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, .35);
+    animation: ninja-arrive .8s ease-out both;
+}
+.naruto-eyebrow {
+    margin: 0 0 22px;
+    color: #9dcaff;
+    font-size: 11px;
+    line-height: 1.6;
+    font-weight: bold;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+}
+.naruto-entry h1 {
+    margin: 0;
+    color: #ff922e;
+    font-size: clamp(46px, 8vw, 76px);
+    font-weight: 900;
+    letter-spacing: -.055em;
+    line-height: 1;
+}
+.naruto-entry h1 span {
+    display: block;
+    margin-top: 12px;
+    color: #f4f8ff;
+    font-size: clamp(26px, 4vw, 38px);
+    letter-spacing: -.04em;
+}
+.naruto-intro { color: #b8cce5; margin: 22px 0 32px; }
+.naruto-password-form { display: grid; gap: 12px; }
+.naruto-password-form label { color: #d5e6ff; font-size: 13px; }
+.naruto-password-form input {
+    width: 100%;
+    min-width: 0;
+    padding: 16px;
+    border: 1px solid #456183;
+    border-radius: 12px;
+    background: rgba(4, 15, 34, .8);
+    color: #fff;
+    font: inherit;
+}
+.naruto-password-form input::placeholder { color: #9cb0cb; }
+.naruto-password-form input:focus-visible,
+.naruto-enter:focus-visible,
+.naruto-back:focus-visible { outline: 3px solid #83c8ff; outline-offset: 4px; }
+.naruto-enter {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 6px;
+    padding: 17px 20px;
+    background: linear-gradient(110deg, #ffae45, #ff781d);
+    color: #201000;
+    box-shadow: 0 6px 28px rgba(255, 122, 29, .25);
+}
+.naruto-error { margin: 0; color: #ffb5a9; font-size: 14px; }
+.naruto-entry-note { color: #9cb0cb; font-size: 12px; margin: 22px 0 0; }
+.naruto-caption { margin: 0; color: #d5e6ff; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
+.chakra {
+    position: fixed;
+    width: min(42vw, 520px);
+    height: min(42vw, 520px);
+    border-radius: 50%;
+    filter: blur(65px);
+    pointer-events: none;
+    z-index: -1;
+    opacity: .2;
+    animation: chakra-drift 8s ease-in-out infinite alternate;
+}
+.chakra-blue { background: #008cff; left: -12%; bottom: -10%; }
+.chakra-orange { background: #ff7918; right: -12%; top: -10%; animation-delay: -4s; }
+@keyframes ninja-arrive {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes chakra-drift {
+    from { transform: translateY(-20px) scale(.9); }
+    to { transform: translateY(25px) scale(1.1); }
+}
+/* Familiar dashboard, with Naruto colors. */
+.naruto-dashboard { background: linear-gradient(180deg, #07162e, #102d52); }
+.naruto-dashboard .hero { background: #0c2240; border-color: #31567f; border-top: 3px solid #ff8a20; }
+.naruto-dashboard .hero-label { color: #ff9b3d; }
+.naruto-dashboard .btn-secondary { border-color: #ff922e; color: #ffb76a; }
+@media (max-width: 700px) {
+    .naruto-gate::before { background-position: 58% center; }
+    .naruto-gate::after { background: linear-gradient(0deg, rgba(3, 12, 29, .94), rgba(3, 12, 29, .48)); }
+    .naruto-entry { gap: 32px; }
+    .naruto-entry-card { align-self: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .naruto-entry-card, .chakra { animation: none; }
+    .naruto-enter { transition: none; }
+}

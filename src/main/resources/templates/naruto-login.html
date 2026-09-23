@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Naruto — Vinyl Encyclopedia</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/naruto.css}">
+</head>
+<body class="naruto-gate">
+<div class="chakra chakra-blue" aria-hidden="true"></div>
+<div class="chakra chakra-orange" aria-hidden="true"></div>
+<main class="naruto-entry">
+    <a th:href="@{/pet-projects}" class="naruto-back">← Back to pet projects</a>
+    <section class="naruto-entry-card" aria-labelledby="entry-title">
+        <p class="naruto-eyebrow">A story worth watching together</p>
+        <h1 id="entry-title">NARUTO<span>Our ninja way.</span></h1>
+        <p class="naruto-intro">Two friends. One journey.</p>
+        <form th:action="@{/pet-projects/naruto/unlock}" method="post" class="naruto-password-form">
+            <label for="naruto-password">Enter the secret password</label>
+            <input id="naruto-password" name="password" type="password" autocomplete="current-password"
+                   required maxlength="128" placeholder="Your secret passphrase"
+                   th:attr="aria-invalid=${passwordError != null},aria-describedby=${passwordError != null ? 'password-error' : null}">
+            <p th:if="${passwordError}" th:text="${passwordError}" id="password-error" class="naruto-error" role="alert"></p>
+            <button type="submit" class="btn naruto-enter">Enter our world <span aria-hidden="true">→</span></button>
+        </form>
+        <p class="naruto-entry-note">Our private watch space</p>
+    </section>
+    <p class="naruto-caption">Two paths. One bond.</p>
+</main>
+</body>
+</html>
