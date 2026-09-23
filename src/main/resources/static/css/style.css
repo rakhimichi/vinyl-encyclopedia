@@ -814,5 +814,43 @@ img {
     z-index: 10;
     width: auto;
     max-width: calc(100% - 40px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    padding: 18px 28px;
+    border: 2px solid #ffe7a3;
+    background: linear-gradient(120deg, #ffb703, #ff7a18);
+    color: #201000;
+    font-size: 18px;
+    font-weight: 800;
+    transform-origin: bottom right;
+    box-shadow: 0 0 20px rgba(255, 157, 0, 0.6);
+    animation: pet-projects-glow 2.4s ease-in-out infinite;
+}
+
+.pet-projects-link:hover,
+.pet-projects-link:focus-visible {
+    animation: none;
+    transform: translateY(-3px);
+    box-shadow: 0 0 36px rgba(255, 157, 0, 0.85);
+}
+
+.pet-projects-link:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 5px;
+}
+
+@keyframes pet-projects-glow {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 20px rgba(255, 157, 0, 0.6), 0 0 0 0 rgba(255, 183, 3, 0.35);
+    }
+    50% {
+        transform: scale(1.025);
+        box-shadow: 0 0 38px rgba(255, 157, 0, 0.85), 0 0 0 10px rgba(255, 183, 3, 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pet-projects-link {
+        animation: none;
+        transition: none;
+    }
 }
