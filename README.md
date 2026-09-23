@@ -162,3 +162,16 @@ Kirill Rakhimov
 Haaga-Helia University of Applied Sciences
 
 Back End Programming - SOF003AS3AE-3007
+
+
+## Naruto watch log
+
+`/pet-projects/naruto` opens a shared watch log after the existing account login and the Naruto password gate. Both friends see the same progress; all tracker API routes require the unlocked session and mutations require CSRF protection.
+
+- The custom order in `src/main/resources/naruto/watchlist.txt` contains 592 separate items: 176 episodes + 2 OVA in season 1, and 409 episodes + 5 specials in season 2. Omitted episodes stay omitted. Each episode, OVA, and film counts as one item.
+- Checkmarks are stored in PostgreSQL (`naruto_watches`) with a viewing date and the account that added them. A second mark does not count twice. Unchecking removes that item's contribution from progress and daily activity. Other sessions refresh every 20 seconds while visible.
+- The challenge starts on 24 September 2026. The deadline is 24 September 2027, inclusive, in `Europe/Zurich`. The initial plan uses three items per day. After launch, the forecast uses the last seven calendar days (or days since launch during the first week), including zero-view days and the current day. A zero pace pauses the forecast. Completing after the deadline is a loss.
+- The character of the day is deterministic per account and Zurich calendar date. The bundled 145-name catalog comes from [FandoHub](https://naruto.fandohub.com/ru/character), retrieved on 23 September 2026; biographies are not copied.
+- `./mvnw test` runs the full test suite against an isolated in-memory H2 database. PostgreSQL remains the application database. The added table is created by the existing Hibernate `ddl-auto=update` configuration.
+
+Deploy updates by pushing `main` to GitHub; this project's Heroku app is configured to deploy automatically. Wait for the new release before checking the page. Heroku restarts end the current in-memory sessions, so users may need to sign in and unlock Naruto again; database checkmarks persist.

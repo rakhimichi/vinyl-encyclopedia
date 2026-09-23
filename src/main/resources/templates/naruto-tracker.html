@@ -1,23 +1,106 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Naruto Tracker - Vinyl Encyclopedia</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" th:href="@{/css/naruto.css}">
-    <link rel="icon" type="image/png" href="/vinyl-favicon.png?v=2">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <title>Наш путь ниндзя — Naruto Watch Log</title>
+    <link rel="stylesheet" th:href="@{/css/naruto-tracker.css(v=1)}">
+    <script th:src="@{/js/naruto-tracker.js(v=1)}" defer></script>
 </head>
-<body class="naruto-dashboard">
-<main class="page">
-    <section class="hero">
-        <p class="hero-label">Our watch space</p>
-        <h1>Tracking Naruto watching progress</h1>
-        <p class="hero-text">Coming soon.</p>
-        <div class="hero-actions">
-            <a th:href="@{/pet-projects}" class="btn btn-secondary">Back to pet projects</a>
+<body>
+<a class="skip-link" href="#watch-guide">К списку серий</a>
+<main class="tracker-shell">
+    <nav class="topbar" aria-label="Навигация">
+        <a th:href="@{/pet-projects}" class="back-link">← Pet projects</a>
+        <span class="brand"><span class="brand-mark" aria-hidden="true">渦</span> NARUTO <span>WATCH LOG</span></span>
+        <span id="sync-status" class="sync-status" role="status">Подключаемся…</span>
+    </nav>
+
+    <header class="tracker-header">
+        <div>
+            <p class="eyebrow">ОДНА ИСТОРИЯ · ДВА НИНДЗЯ</p>
+            <h1>Наш путь ниндзя<span>.</span></h1>
+            <p class="subtitle">Смотрим вместе. Отмечаем серии. Успеваем за год.</p>
         </div>
+        <div class="deadline-pill"><span class="status-dot" aria-hidden="true"></span><div><span>Дедлайн миссии</span><strong>24 сентября 2027</strong></div></div>
+    </header>
+
+    <div id="load-error" class="notice error-notice" role="alert" hidden>
+        <span id="load-error-text">Не удалось загрузить прогресс.</span>
+        <button id="retry-load" type="button" class="text-button">Повторить</button>
+    </div>
+    <noscript><p class="notice">Для отметок и графиков включи JavaScript. Прогресс хранится на сервере.</p></noscript>
+
+    <section class="overview" aria-label="Дашборд просмотра">
+        <article class="panel pace-panel">
+            <div class="panel-heading">
+                <h2>Ритм просмотра</h2>
+                <div class="segmented chart-period" role="group" aria-label="Период графика">
+                    <button type="button" data-days="7" aria-pressed="false">7 дней</button>
+                    <button type="button" data-days="30" aria-pressed="true">30 дней</button>
+                </div>
+            </div>
+            <div class="pace-heading">
+                <div><strong class="metric" id="pace-value">—</strong><span class="metric-unit"> / день</span></div>
+                <span id="pace-trend" class="trend">Ориентир — 3 в день</span>
+            </div>
+            <div class="chart-legend"><span><i class="legend-line actual"></i>Просмотрено за день</span><span><i class="legend-line target"></i>Цель: 3</span></div>
+            <div class="chart-wrap">
+                <svg id="pace-chart" viewBox="0 0 700 200" role="img" aria-labelledby="chart-title chart-description">
+                    <title id="chart-title">Частота просмотра</title>
+                    <desc id="chart-description">Загрузка графика.</desc>
+                </svg>
+            </div>
+            <div class="pace-footer"><span>Сегодня <strong id="today-count">—</strong></span><span>За неделю <strong id="week-count">—</strong></span><span id="pace-window">Среднее за последние 7 дней</span></div>
+            <details class="chart-data"><summary>Данные графика</summary><table><caption>Просмотры по дням</caption><thead><tr><th scope="col">Дата</th><th scope="col">Просмотрено</th></tr></thead><tbody id="chart-table"></tbody></table></details>
+        </article>
+
+        <article class="panel progress-panel">
+            <div class="panel-heading"><h2>Весь путь</h2><span class="tiny-label">ОБЩИЙ ПРОГРЕСС</span></div>
+            <div class="progress-headline"><strong class="metric" id="progress-percent">—</strong><span class="metric-unit">%</span></div>
+            <progress id="total-progress" max="100" value="0" aria-label="Общий прогресс просмотра"></progress>
+            <p class="progress-caption"><strong id="watched-count">—</strong> из <span id="total-count">—</span> просмотрено <span class="dot-separator">·</span> осталось <span id="remaining-count">—</span></p>
+            <div class="season-mini"><span>Naruto</span><span id="season-one-count">—</span><progress id="season-one-progress" max="178" value="0" aria-label="Прогресс первого сезона"></progress></div>
+            <div class="season-mini"><span>Shippuden</span><span id="season-two-count">—</span><progress id="season-two-progress" max="414" value="0" aria-label="Прогресс второго сезона"></progress></div>
+            <p class="muted fine-print">Серия, OVA и фильм = 1 просмотр. Только ваш список.</p>
+        </article>
     </section>
+
+    <section class="mission-panel panel" aria-labelledby="mission-heading">
+        <div class="mission-status"><span class="eyebrow">МИССИЯ · 12 МЕСЯЦЕВ</span><h2 id="mission-heading">Загружаем прогноз…</h2><span id="mission-detail" class="muted">Старт 24.09.2026</span></div>
+        <div class="forecast-number"><span>Предполагаемый финиш</span><strong id="forecast-date">—</strong><small id="forecast-hint">По темпу просмотра</small></div>
+        <div class="forecast-number"><span>До дедлайна</span><strong id="deadline-days">—</strong><small id="required-pace">—</small></div>
+        <details class="forecast-info"><summary>Как считается прогноз</summary><p>Старт — 24.09.2026. До первых просмотров ориентир — 3 пункта в день. Затем используем среднее за последние 7 календарных дней, включая дни без просмотра и сегодняшний день. В первую неделю — только дни с начала миссии. Если темп равен нулю, дата финиша не рассчитывается.</p><p>Каждый пункт считается один раз, по выбранной дате просмотра. Дедлайн — 24.09.2027 включительно, время Цюриха. Если к концу этого дня маршрут не завершён, миссия проиграна. <span id="baseline-finish"></span></p></details>
+    </section>
+
+    <section class="daily-panel panel" aria-labelledby="daily-heading">
+        <div class="daily-emblem" aria-hidden="true">忍</div>
+        <div class="daily-copy"><p class="eyebrow">МИНУТКА ПЕРЕД СЕРИЕЙ</p><h2 id="daily-heading">Кто ты из Наруто сегодня?</h2><p id="character-hint" class="muted">Один день — один персонаж. У каждого свой.</p><div id="character-result" hidden><strong id="character-name"></strong><a id="character-link" target="_blank" rel="noopener noreferrer">Досье ↗ <span class="spoiler-note">возможны спойлеры</span></a></div></div>
+        <button id="reveal-character" class="button button-orange" type="button" disabled>Узнать персонажа <span aria-hidden="true">↗</span></button>
+    </section>
+
+    <section id="watch-guide" class="watch-guide" aria-labelledby="guide-heading">
+        <div class="guide-heading"><div><p class="eyebrow">ШАГ ЗА ШАГОМ</p><h2 id="guide-heading">Маршрут просмотра</h2></div><button id="go-next" class="button button-outline" type="button" disabled>К следующей серии ↓</button></div>
+        <div class="guide-toolbar panel">
+            <div class="season-tabs" role="tablist" aria-label="Сезон">
+                <button type="button" id="season-tab-1" role="tab" aria-selected="true" aria-controls="season-panel" data-season="1">01 <span>Naruto</span><small id="tab-count-1">—</small></button>
+                <button type="button" id="season-tab-2" role="tab" aria-selected="false" aria-controls="season-panel" tabindex="-1" data-season="2">02 <span>Shippuden</span><small id="tab-count-2">—</small></button>
+            </div>
+            <a id="watch-link" class="watch-link" href="https://jutsu.tv/181-naruto-k2.html" target="_blank" rel="noopener noreferrer">Смотреть 1 сезон ↗</a>
+        </div>
+        <div class="guide-controls">
+            <label class="search-label"><span class="sr-only">Номер серии или OVA / фильм</span><input id="episode-search" type="search" placeholder="Найти серию, OVA, фильм…" autocomplete="off"></label>
+            <label class="filter-checkbox"><input id="only-unwatched" type="checkbox"> Только непросмотренные</label>
+            <label class="date-label">Дата просмотра <input id="watch-date" type="date" min="2002-01-01" required></label>
+        </div>
+        <div class="guide-caption"><span id="next-caption">Загрузка маршрута…</span><button id="expand-groups" type="button" class="text-button">Развернуть все</button></div>
+        <div id="season-panel" role="tabpanel" aria-labelledby="season-tab-1" aria-busy="true"><div id="episode-groups" class="episode-groups"><p class="loading-copy">Загружаем серии…</p></div></div>
+        <p class="guide-note">Нажми номер, чтобы отметить просмотр. Ещё раз — снять галочку. Для другой даты сними отметку и поставь заново. Метки С, Ф1–Ф4 и ФН сохранены из вашего списка.</p>
+    </section>
+    <footer class="tracker-footer"><span>Общий журнал · даты по Europe/Zurich</span><a href="https://naruto.fandohub.com/ru/character" target="_blank" rel="noopener noreferrer">Каталог персонажей · FandoHub ↗</a></footer>
 </main>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>
